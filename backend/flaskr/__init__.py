@@ -34,7 +34,6 @@ def create_app(test_config=None):
     print(formatted_ctg)
     if(len(formatted_ctg)==0):
       abort(404)
-
     return jsonify({ 
       'categories': formatted_ctg,
     })
@@ -51,13 +50,28 @@ def create_app(test_config=None):
   ten questions per page and pagination at the bottom of the screen for three pages.
   Clicking on the page numbers should update the questions. 
   '''
-  # @app.route('/categories', methods=['GET'])
-
-
+  @app.route('/questions', methods=['GET'])
+  def questions():
+    categories = Category.query.all()
+    formatted_ctg = [ctg.type for ctg in categories]
+    page = request.args.get('page', 1, type=int)
+    start = (page-1)*QUESTIONS_PER_PAGE #Page can be 0 ?
+    end = start + QUESTIONS_PER_PAGE
+    questions = Question.query.all()
+    formatted_quest = [quest.format() for quest in questions]
+    cur_quest = formatted_quest[start:end]
+    if(len(cur_quest)==0):
+          abort(404)      
+    return jsonify({
+      'questions':cur_quest,
+      'totalQuestions':len(Question.query.all()),
+      'currentCategory':'',
+      'categories': formatted_ctg,
+    })
+        
   '''
   @TODO: 
   Create an endpoint to DELETE question using a question ID. 
-
   TEST: When you click the trash icon next to a question, the question will be removed.
   This removal will persist in the database and when you refresh the page. 
   '''
