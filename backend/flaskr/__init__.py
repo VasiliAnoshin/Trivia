@@ -13,6 +13,7 @@ def create_app(test_config=None):
   app = Flask(__name__)
   setup_db(app)
   
+
   '''
   @TODO: Set up CORS. Allow '*' for origins. Delete the sample route after completing the TODOs
   '''
@@ -20,7 +21,6 @@ def create_app(test_config=None):
   '''
   @TODO: Use the after_request decorator to set Access-Control-Allow
   '''
-
   '''
   @TODO: 
   Create an endpoint to handle GET requests 
@@ -60,12 +60,15 @@ def create_app(test_config=None):
     questions = Question.query.all()
     formatted_quest = [quest.format() for quest in questions]
     cur_quest = formatted_quest[start:end]
+    
     if(len(cur_quest)==0):
-          abort(404)      
+          abort(404) 
+
     return jsonify({
+      'success': True,
       'questions':cur_quest,
       'totalQuestions':len(Question.query.all()),
-      'currentCategory':'',
+      'currentCategory': '',
       'categories': formatted_ctg,
     })
         
@@ -75,6 +78,19 @@ def create_app(test_config=None):
   TEST: When you click the trash icon next to a question, the question will be removed.
   This removal will persist in the database and when you refresh the page. 
   '''
+  @app.route('/questions/<int:id>', methods=['DELETE'])
+  def delete_question(id):
+    try:
+      quest = Question.query.filter(Question.id == id).one_or_none()
+      if quest is None:
+        abort(404)
+      quest.delete()
+    except:
+      abort(422)
+    return jsonify({
+      'success':True
+    })
+
 
   '''
   @TODO: 
