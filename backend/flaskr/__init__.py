@@ -39,7 +39,6 @@ def create_app(test_config=None):
   # @cross_origin()
   @app.route('/categories', methods=['GET'])
   def get_categories():
-    print('inside categories method')
     categories = Category.query.all()
     formatted_ctg = [ctg.type for ctg in categories]
     print(formatted_ctg)
@@ -113,6 +112,21 @@ def create_app(test_config=None):
   the form will clear and the question will appear at the end of the last page
   of the questions list in the "List" tab.  
   '''
+  @app.route('/questions', methods=['POST'])
+  def post_new_question():
+    try:
+      data = request.get_json()
+      quest=data['question']
+      answ=data['answer']
+      diff=data['difficulty']
+      ctg=data['category']
+      question=Question(question=quest,answer=answ,category=ctg,difficulty=diff)
+      question.insert()
+    except:
+      abort(422)
+    return jsonify({
+      'success': True
+    })
 
   '''
   @TODO: 
