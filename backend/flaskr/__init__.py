@@ -116,11 +116,7 @@ def create_app(test_config=None):
   def post_new_question():
     try:
       data = request.get_json()
-      quest=data['question']
-      answ=data['answer']
-      diff=data['difficulty']
-      ctg=data['category']
-      question=Question(question=quest,answer=answ,category=ctg,difficulty=diff)
+      question=Question(question=data['question'],answer=data['answer'],category=data['category'],difficulty=data['difficulty'])
       question.insert()
     except:
       abort(422)
