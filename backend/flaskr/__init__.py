@@ -116,7 +116,10 @@ def create_app(test_config=None):
   def post_new_question():
     try:
       data = request.get_json()
-      question=Question(question=data['question'],answer=data['answer'],category=data['category'],difficulty=data['difficulty'])
+      question=Question(question=data['question'],
+                        answer=data['answer'],
+                        category=data['category'],
+                        difficulty=data['difficulty'])
       question.insert()
     except:
       abort(422)
@@ -137,13 +140,13 @@ def create_app(test_config=None):
 
   '''
   @TODO: 
-  Create a GET endpoint to get questions based on category. 
-
+  Create a GET endpoint to get questions based on category.
   TEST: In the "List" tab / main screen, clicking on one of the 
   categories in the left column will cause only questions of that 
   category to be shown. 
   '''
 
+  #def get_question_based_category():
 
   '''
   @TODO: 
@@ -162,7 +165,37 @@ def create_app(test_config=None):
   Create error handlers for all expected errors 
   including 404 and 422. 
   '''
-  
+  @app.errorhandler(404)
+  def not_found(error):
+    return jsonify({
+      "success": False,
+      "error": 404,
+      "message":"recourse not found"
+    }), 404
+
+  @app.errorhandler(422)
+  def unprocessable(error):
+    return jsonify({
+      "success": False,
+      "error": 422,
+      "message":"unprocessable"
+  }), 422
+
+  @app.errorhandler(405)
+  def method_not_allowed(error):
+    return jsonify({
+      'code': 405,
+      'success': False,
+      'message': 'method not allowed'
+  }), 405
+
+  @app.errorhandler(500)
+  def internal_server_error(error):
+    return jsonify({
+      'code': 500,
+      'success': False,
+      'message': 'server error'
+    }), 500  
   return app
 
     
