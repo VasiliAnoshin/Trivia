@@ -12,11 +12,9 @@ def create_app(test_config=None):
   # create and configure the app
   app = Flask(__name__)
   setup_db(app)
+  CORS(app, resources ={r"/*": {"origins":'*'}})
   #app = Flask(__name__, instance_relative_config=True)
-  # CORS(app)
   #cors = CORS(app, resources={r"/*": {"origins": "*"}})
-  
-
   '''
   @TODO: Set up CORS. Allow '*' for origins. Delete the sample route after completing the TODOs
   '''
@@ -25,11 +23,11 @@ def create_app(test_config=None):
   @TODO: Use the after_request decorator to set Access-Control-Allow
   '''
   # CORS Headers 
-  # @app.after_request
-  # def after_request(response):
-  #   response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization,true')
-  #   response.headers.add('Access-Control-Allow-Methods', 'GET,PATCH,POST,DELETE,OPTIONS')
-  #   return response
+  @app.after_request
+  def after_request(response):
+     response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization,true')
+     response.headers.add('Access-Control-Allow-Methods', 'GET,PATCH,POST,DELETE,OPTIONS')
+     return response
   
 
 
@@ -49,7 +47,7 @@ def create_app(test_config=None):
   Create an endpoint to handle GET requests 
   for all available categories.
   '''
-  # @cross_origin()
+  #@cross_origin()
   @app.route('/categories', methods=['GET'])
   def get_categories():
     categories = Category.query.all()
