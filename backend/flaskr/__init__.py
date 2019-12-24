@@ -37,6 +37,13 @@ def create_app(test_config=None):
     categories = Category.query.all()
     return [ctg.type for ctg in categories]
 
+  def get_formatted_questions(questions):
+    page = request.args.get('page', 1, type=int)
+    start = (page-1)*QUESTIONS_PER_PAGE #Page can be 0 ?
+    end = start + QUESTIONS_PER_PAGE
+    formatted_quest = [quest.format() for quest in questions]
+    return formatted_quest[start:end]
+  
   '''
   @TODO: 
   Create an endpoint to handle GET requests 
@@ -68,16 +75,10 @@ def create_app(test_config=None):
   '''
   @app.route('/questions', methods=['GET'])
   def questions():
-    page = request.args.get('page', 1, type=int)
-    start = (page-1)*QUESTIONS_PER_PAGE #Page can be 0 ?
-    end = start + QUESTIONS_PER_PAGE
     questions = Question.query.all()
-    formatted_quest = [quest.format() for quest in questions]
-    cur_quest = formatted_quest[start:end]
-    
+    cur_quest = get_formatted_questions(questions)
     if not cur_quest:
           abort(404) 
-
     return jsonify({
       'success': True,
       'questions':cur_quest,
@@ -152,12 +153,8 @@ def create_app(test_config=None):
   @app.route('/categories/<int:id>/questions', methods=['GET'])
   def get_question_by_category(id):
      try:
-        page = request.args.get('page', 1, type=int)
-        start = (page-1)*QUESTIONS_PER_PAGE #Page can be 0 ?
-        end = start + QUESTIONS_PER_PAGE
         questions = Question.query.filter(Question.category == id).all()
-        formatted_quest = [quest.format() for quest in questions]
-        cur_quest = formatted_quest[start:end]
+        cur_quest = get_formatted_questions(questions)
      except:
         abort(422)
      return jsonify({
