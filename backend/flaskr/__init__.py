@@ -106,7 +106,16 @@ def create_app(test_config=None):
       'success':True
     })
 
+  '''
+  @TODO: 
+  Create a POST endpoint to get questions based on a search term. 
+  It should return any questions for whom the search term 
+  is a substring of the question. 
 
+  TEST: Search by any phrase. The questions list will update to include 
+  only question that include that string within their question. 
+  Try using the word "title" to start. 
+  '''
   '''
   @TODO: 
   Create an endpoint to POST a new question, 
@@ -121,27 +130,25 @@ def create_app(test_config=None):
   def post_new_question():
     try:
       data = request.get_json()
-      question=Question(question=data['question'],
-                        answer=data['answer'],
-                        category=data['category'],
-                        difficulty=data['difficulty'])
-      question.insert()
+      if 'searchTerm' in data:
+        questions = Question.query.filter(Question.question.ilike(f"%{data['searchTerm']}%")).all()
+        return jsonify({
+          'success': True,
+          'questions': get_formatted_questions(questions),
+          'current_category': '',
+          'total_questions':len(questions),
+        })
+      else:
+        question=Question(question=data['question'],
+                          answer=data['answer'],
+                          category=data['category'],
+                          difficulty=data['difficulty'])
+        question.insert()
+        return jsonify({
+            'success': True
+        })
     except:
       abort(422)
-    return jsonify({
-      'success': True
-    })
-
-  '''
-  @TODO: 
-  Create a POST endpoint to get questions based on a search term. 
-  It should return any questions for whom the search term 
-  is a substring of the question. 
-
-  TEST: Search by any phrase. The questions list will update to include 
-  only question that include that string within their question. 
-  Try using the word "title" to start. 
-  '''
 
   '''
   @TODO: 
@@ -175,6 +182,20 @@ def create_app(test_config=None):
   one question at a time is displayed, the user is allowed to answer
   and shown whether they were correct or not. 
   '''
+  @app.route('/quizzes', methods=['POST'])
+  def play_quizz():
+    try:
+      data = request.get_json()
+      previousQuestions = data['previous_questions']
+      ctg_id = data['quiz_category']
+      questions = Question.query.filter(Question.category == ctg_id).all()
+    except:
+       abort(422)
+
+    return jsonify({
+        'previousQuestions': previousQuestions,
+        'currentQuestion': get_formatted_questions(questions),
+     })     
   '''
   @TODO: 
   Create error handlers for all expected errors 
