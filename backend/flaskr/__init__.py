@@ -31,6 +31,12 @@ def create_app(test_config=None):
   #   response.headers.add('Access-Control-Allow-Methods', 'GET,PATCH,POST,DELETE,OPTIONS')
   #   return response
   
+
+
+  def get_formatted_categories():
+    categories = Category.query.all()
+    return [ctg.type for ctg in categories]
+
   '''
   @TODO: 
   Create an endpoint to handle GET requests 
@@ -62,8 +68,6 @@ def create_app(test_config=None):
   '''
   @app.route('/questions', methods=['GET'])
   def questions():
-    categories = Category.query.all()
-    formatted_ctg = [ctg.type for ctg in categories]
     page = request.args.get('page', 1, type=int)
     start = (page-1)*QUESTIONS_PER_PAGE #Page can be 0 ?
     end = start + QUESTIONS_PER_PAGE
@@ -79,7 +83,7 @@ def create_app(test_config=None):
       'questions':cur_quest,
       'total_questions':len(Question.query.all()),
       'current_category': '',
-      'categories': formatted_ctg,
+      'categories': get_formatted_categories(),
     })
         
   '''
@@ -145,9 +149,24 @@ def create_app(test_config=None):
   categories in the left column will cause only questions of that 
   category to be shown. 
   '''
-
-  #def get_question_based_category():
-
+  @app.route('/categories/<int:id>/questions', methods=['GET'])
+  def get_question_by_category(id):
+     try:
+        page = request.args.get('page', 1, type=int)
+        start = (page-1)*QUESTIONS_PER_PAGE #Page can be 0 ?
+        end = start + QUESTIONS_PER_PAGE
+        questions = Question.query.filter(Question.category == id).all()
+        formatted_quest = [quest.format() for quest in questions]
+        cur_quest = formatted_quest[start:end]
+     except:
+        abort(422)
+     return jsonify({
+      'success': True,
+      'questions':cur_quest,
+      'total_questions':len( Question.query.filter(Question.category == id).all()),
+      'current_category': id,
+      'categories': get_formatted_categories(),   
+    })
   '''
   @TODO: 
   Create a POST endpoint to get questions to play the quiz. 
@@ -159,7 +178,6 @@ def create_app(test_config=None):
   one question at a time is displayed, the user is allowed to answer
   and shown whether they were correct or not. 
   '''
-
   '''
   @TODO: 
   Create error handlers for all expected errors 
@@ -170,7 +188,7 @@ def create_app(test_config=None):
     return jsonify({
       "success": False,
       "error": 404,
-      "message":"recourse not found"
+      "message":"resourse not found"
     }), 404
 
   @app.errorhandler(422)
