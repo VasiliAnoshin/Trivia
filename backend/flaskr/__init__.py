@@ -11,6 +11,7 @@ QUESTIONS_PER_PAGE = 10
 def create_app(test_config=None):
   # create and configure the app
   app = Flask(__name__)
+  app.config['DEBUG'] = True
   setup_db(app)
   CORS(app, resources ={r"/*": {"origins":'*'}})
   #cors = CORS(app, resources={r"/*": {"origins": "*"}})
@@ -35,12 +36,33 @@ def create_app(test_config=None):
     formatted_quest = [quest.format() for quest in questions]
     return formatted_quest[start:end]
   
+  def get_questions_sorted_by_category(data):
+    ctg_id = data['quiz_category']['id']
+    if  data['quiz_category']['id'] == 0:
+      return  Question.query.filter().all()
+    else:
+      return Question.query.filter(Question.category == ctg_id).all()
+
+  def get_queez_question(data):
+    previousQuestions = data['previous_questions']
+    print('inside my app')
+    questions = get_questions_sorted_by_category(data)
+    print(questions)
+    if not previousQuestions:
+        rand_quest = random.choice(questions)
+        return  rand_quest.format()
+    else:
+        sorted_questions=[]
+        for quest in questions:
+          if quest.id not in previousQuestions:
+            sorted_questions.append(quest)
+        print(sorted_questions)
+        return  random.choice(sorted_questions).format()
   '''
   @TODO: 
   Create an endpoint to handle GET requests 
   for all available categories.
   '''
-  #@cross_origin()
   @app.route('/categories', methods=['GET'])
   def get_categories():
     categories = Category.query.all()
@@ -162,6 +184,7 @@ def create_app(test_config=None):
       'current_category': id,
       'categories': get_formatted_categories(),   
     })
+
   '''
   @TODO: 
   Create a POST endpoint to get questions to play the quiz. 
@@ -176,16 +199,13 @@ def create_app(test_config=None):
   @app.route('/quizzes', methods=['POST'])
   def play_quizz():
     try:
-      data = request.get_json()
-      previousQuestions = data['previous_questions']
-      ctg_id = data['quiz_category']
-      questions = Question.query.filter(Question.category == ctg_id).all()
+        data = request.get_json()
+        rand_quest = get_queez_question(data)
+        print(rand_quest)
     except:
        abort(422)
-
     return jsonify({
-        'previousQuestions': previousQuestions,
-        'currentQuestion': get_formatted_questions(questions),
+        'question': rand_quest,
      })     
   '''
   @TODO: 
