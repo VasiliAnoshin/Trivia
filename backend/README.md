@@ -52,6 +52,30 @@ Setting the `FLASK_ENV` variable to `development` will detect file changes and r
 
 Setting the `FLASK_APP` variable to `flaskr` directs flask to use the `flaskr` directory and the `__init__.py` file to find the application. 
 
+# API Reference
+
+### Getting Started
+- Base URL: At present this app can only be run locally and is not hosted as a base URL. The backend app is hosted at the default, ```http://127.0.0.1:5000/```, which is set as a proxy in the frontend configuration.
+- Authentification: This version of the application does not require authentification or API keys.
+
+### Error Handling
+Errors are returned as JSON objects in the following format:
+```
+{
+  "success": False,
+  "error": 400,
+  "message": "bad request"
+}
+```
+
+The API will return:
+- 400: Bad request
+- 404: Resource Not found
+- 422: Not processable
+- 500: Server error
+- 405: Method not allowed
+
+
 ## Tasks
 
 One note before you delve into your tasks: for each endpoint you are expected to define the endpoint and response data. The frontend will be a plentiful resource because it is set up to expect certain endpoints and response data formats already. You should feel free to specify endpoints in your own way; if you do so, make sure to update the frontend or you will get some unexpected behavior. 
