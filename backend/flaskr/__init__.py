@@ -14,10 +14,7 @@ def create_app(test_config=None):
   app.config['DEBUG'] = True
   setup_db(app)
   CORS(app, resources ={r"/*": {"origins":'*'}})
-  #cors = CORS(app, resources={r"/*": {"origins": "*"}})
-  '''
-  @TODO: Set up CORS. Allow '*' for origins. Delete the sample route after completing the TODOs
-  '''
+ 
   # CORS Headers 
   @app.after_request
   def after_request(response):
@@ -31,7 +28,7 @@ def create_app(test_config=None):
 
   def get_formatted_questions(questions):
     page = request.args.get('page', 1, type=int)
-    start = (page-1)*QUESTIONS_PER_PAGE #Page can be 0 ?
+    start = (page-1)*QUESTIONS_PER_PAGE
     end = start + QUESTIONS_PER_PAGE
     formatted_quest = [quest.format() for quest in questions]
     return formatted_quest[start:end]
@@ -45,9 +42,7 @@ def create_app(test_config=None):
 
   def get_queez_question(data):
     previousQuestions = data['previous_questions']
-    print('inside my app')
     questions = get_questions_sorted_by_category(data)
-    print(questions)
     if not previousQuestions:
         rand_quest = random.choice(questions)
         return  rand_quest.format()
@@ -56,8 +51,9 @@ def create_app(test_config=None):
         for quest in questions:
           if quest.id not in previousQuestions:
             sorted_questions.append(quest)
-        print(sorted_questions)
-        return  random.choice(sorted_questions).format()
+        if len(sorted_questions)==0:
+          return None
+        return  (random.choice(sorted_questions)).format()
   '''
   @TODO: 
   Create an endpoint to handle GET requests 
@@ -201,7 +197,6 @@ def create_app(test_config=None):
     try:
         data = request.get_json()
         rand_quest = get_queez_question(data)
-        print(rand_quest)
     except:
        abort(422)
     return jsonify({
