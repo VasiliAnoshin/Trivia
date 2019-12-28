@@ -23,7 +23,14 @@ class TriviaTestCase(unittest.TestCase):
             self.db.init_app(self.app)
             # create all tables
             self.db.create_all()
-    
+
+        self.new_question = {
+           "question": "London is the capital of GB?",
+           "answer": "Yes",
+           "category": 4,
+           "difficulty": 1
+        }
+
     def tearDown(self):
         """Executed after reach test"""
         pass
@@ -75,6 +82,7 @@ class TriviaTestCase(unittest.TestCase):
             'previous_questions': [],
             'quiz_category':{'type': 'Geography', 'id': '3'}})
         data = json.loads(res.data)
+
         self.assertEqual(res.status_code, 200)
         self.assertTrue(data)
 
@@ -82,10 +90,41 @@ class TriviaTestCase(unittest.TestCase):
         res = self.client().post('/quizzes', json={
             'previous_questions': [],
             'quiz_category':{'type': 'Geography', 'id': '90'}})
+
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 404)
 
+    def test_insert_new_question(self):
+        res = self.client().post('/questions', json=self.new_question)
+        data = json.loads(res.data)
 
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data['success'], True)
+
+    def test_405_if_question_creation_not_allowed(self):
+        res = self.client().post('/questions/45', json=self.new_question)
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 405)
+        self.assertEqual(data['success'], False)
+    
+    def test_search_by_param(self):
+        res = self.client().post('/questions', json={"searchTerm": "title"})
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data['success'], True)
+        self.assertTrue(data)
+    
+    def test_sort_questions_by_category(self):
+        res = self.client().get('/categories/3/questions')
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data['success'], True)
+        self.assertTrue(data)
+        self.assertEqual(data['current_category'], 3)
+        self.assertTrue(data['total_questions'])
 
 # Make the tests conveniently executable
 if __name__ == "__main__":
