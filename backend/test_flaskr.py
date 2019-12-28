@@ -56,13 +56,34 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(res.status_code, 200)
         self.assertTrue(data)
 
-    def test_delete_question(self):
+    # def test_delete_question(self):
+    #     res = self.client().delete('/questions/4')
+    #     data = json.loads(res.data)
+    #     question = Question.query.filter(Question.id == 4).one_or_none()
+    #     self.assertEqual(question, None)
+    #     self.assertEqual(res.status_code, 200)    
+    #     self.assertEqual(data['success'], True)
+
+    def test_delete_failed(self):
         res = self.client().delete('/questions/4')
         data = json.loads(res.data)
-        question = Question.query.filter(Question.id == 4).one_or_none()
-        self.assertEqual(question, None)
-        self.assertEqual(res.status_code, 200)    
-        self.assertEqual(data['success'], True)
+        self.assertEqual(res.status_code, 404)
+        self.assertEqual(data['success'], False)
+
+    def test_get_queez_question(self):
+        res = self.client().post('/quizzes', json={
+            'previous_questions': [],
+            'quiz_category':{'type': 'Geography', 'id': '3'}})
+        data = json.loads(res.data)
+        self.assertEqual(res.status_code, 200)
+        self.assertTrue(data)
+
+    def test_get_queez_question_failed(self):
+        res = self.client().post('/quizzes', json={
+            'previous_questions': [],
+            'quiz_category':{'type': 'Geography', 'id': '90'}})
+        data = json.loads(res.data)
+        self.assertEqual(res.status_code, 404)
 
 
 

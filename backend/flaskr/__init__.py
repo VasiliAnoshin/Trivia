@@ -136,8 +136,7 @@ def create_app(test_config=None):
         data = request.get_json()
         rand_quest = get_queez_question(data)
     except:
-       print('This is error output', file=sys.stderr)
-       abort(422)
+       abort(404)
     return jsonify({
         'question': rand_quest,
      })     
