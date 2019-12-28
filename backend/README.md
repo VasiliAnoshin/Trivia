@@ -83,13 +83,46 @@ The API will return:
   - Returns: List with  categories
 - Sample
   -```curl localhost:5000/categories```
-  ```
-  { "Science",
+```
+  [ "Science",
     "Art",
     "Geography",
     "History",
     "Entertainment",
-    "Sports"}
+    "Sports"
+    ]
+```
+
+#### GET /questions
+- Genreal:
+  - Return a list of questions, number of total questions, current category,categories. 
+  - Result are paginated in group of 10. Include a request argument to choose page number, starting from 1  
+- Sample:
+  - Sample: ``` curl localhost:5000/questions ```
+```
+{
+  'success': True,
+  'questions':
+  [
+    {
+      "answer": "Muhammad Ali", 
+      "category": 4, 
+      "difficulty": 4, 
+      "id": 9, 
+      "question": "What boxer's original name is Cassius Clay?"
+    }
+  ],
+  'total_questions': 18,
+  'current_category': '',
+  'categories' : [
+    "Entertainment", 
+    "History", 
+    "Sports", 
+    "Geography", 
+    "Art", 
+    "Science"
+  ],
+}
 ```
 
 ## Tasks
