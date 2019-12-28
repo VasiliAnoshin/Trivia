@@ -96,7 +96,8 @@ The API will return:
 #### GET /questions
 - Genreal:
   - Return a list of questions, number of total questions, current category,categories. 
-  - Result are paginated in group of 10. Include a request argument to choose page number, starting from 1  
+  - Result are paginated in group of 10. Include a request argument to choose page number, starting from 1
+  - Request Argument: page
 - Sample:
   - Sample: ``` curl localhost:5000/questions ```
 ```
@@ -127,6 +128,7 @@ The API will return:
 #### DELETE /questions/<int:id>
 - Genreal:
   - DELETE question using a question ID.
+  - Request Argument: None
 - Sample: ```curl -X DELETE localhost:5000/questions/1```
 ```
 {
@@ -136,13 +138,16 @@ The API will return:
 #### POST /questions
 - Genreal:
   - POST a new question,  which will require the question and answer text, category, and difficulty score. (When you submit a question on     the "Add" tab, the form will clear and the question will appear at the end of the last page of the questions list in the "List" tab)
+  - Request Argument for Post new question: None
   - Get questions based on a search term. Return any questions for whom the search term is a substring of the question.
     (Search by any phrase. The questions list will update to include only question that include that string within their question. 
     Try using the word "title" to start.)
+  - Request Argument for Search: page
 
 #### GET /categories/<int:id>/questions
 - Genreal:
   - Get questions based on category.
+  - Request Argument: page
 - Sample: ```curl -X GET localhost:5000/categories/3/questions```
 ```
 {
@@ -186,6 +191,7 @@ The API will return:
 - Genreal:
   - Get questions to play the quiz. This endpoint recieve category + previous question parameters 
     and return a random questions within the given category, if provided, and that is not one of the previous questions.
+  - Request Argument: None
 
 ## Testing
 To run the tests, run
