@@ -161,7 +161,7 @@ The API will return:
   "total_questions": 1
 }
 ```
-- Sample: For Post new question: ``` curl -X POST -H "Content-Type: application/json" -d '{"question": "London is the capital of GB?", "answer": "Yes", "category": 4, "difficulty": 1}' localhost:5000/questions
+- Sample: For Post new question: ```curl -X POST -H "Content-Type: application/json" -d '{"question": "London is the capital of GB?", "answer": "Yes", "category": 4, "difficulty": 1}' localhost:5000/questions```
 ```
 {
   "success": true
