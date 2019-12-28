@@ -75,10 +75,25 @@ The API will return:
 - 500: Server error
 - 405: Method not allowed
 
+### Endpoints
+### GET '/categories'
+- Genreal:
+  - Fetches a list of categories
+  - Request Arguments: None
+  - Returns: List with  categories
+- Sample
+  -```curl localhost:5000/categories```
+  ```
+  { "Science",
+    "Art",
+    "Geography",
+    "History",
+    "Entertainment",
+    "Sports"}
+```
 
 ## Tasks
 
-One note before you delve into your tasks: for each endpoint you are expected to define the endpoint and response data. The frontend will be a plentiful resource because it is set up to expect certain endpoints and response data formats already. You should feel free to specify endpoints in your own way; if you do so, make sure to update the frontend or you will get some unexpected behavior. 
 
 1. Use Flask-CORS to enable cross-domain requests and set response headers. 
 2. Create an endpoint to handle GET requests for questions, including pagination (every 10 questions). This endpoint should return a list of questions, number of total questions, current category, categories. 
