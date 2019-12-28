@@ -192,6 +192,20 @@ The API will return:
   - Get questions to play the quiz. This endpoint recieve category + previous question parameters 
     and return a random questions within the given category, if provided, and that is not one of the previous questions.
   - Request Argument: None
+- Sample : ```curl -X POST -H 'Content-Type:application/json' -d '{"previous_questions":[],"quiz_category":{"type":"All","id":"0"}}' localhost:5000/quizzes```
+```
+{
+  "question": {
+    "answer": "Blood",
+    "category": 1,
+    "difficulty": 4,
+    "id": 22,
+    "question": "Hematology is a branch of medicine involving the study of what?"
+  }
+}
+
+```
+
 
 ## Testing
 To run the tests, run
