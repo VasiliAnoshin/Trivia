@@ -182,8 +182,10 @@ The API will return:
   "total_questions": 3
 }
 ```  
-
-
+#### POST /quizzes
+- Genreal:
+  - Get questions to play the quiz. This endpoint recieve category + previous question parameters 
+    and return a random questions within the given category, if provided, and that is not one of the previous questions.
 
 ## Testing
 To run the tests, run
