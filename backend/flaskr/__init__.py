@@ -84,13 +84,11 @@ def create_app(test_config=None):
   def delete_question(id):
     try:
       quest = Question.query.filter(Question.id == id).one_or_none()
-      if quest is None:
-        abort(404)
       quest.delete()
     except:
-      abort(422)
+      abort(404)
     return jsonify({
-      'success':True
+        'success':True
     })
 
   @app.route('/questions', methods=['POST'])
