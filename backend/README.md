@@ -143,6 +143,30 @@ The API will return:
     (Search by any phrase. The questions list will update to include only question that include that string within their question. 
     Try using the word "title" to start.)
   - Request Argument for Search: page
+- Sample: For Search Term : ```curl -X POST -H "Content-Type: application/json" -d '{"searchTerm": "title"}' localhost:5000/questions```
+
+```
+{
+  "current_category": "",
+  "questions": [
+    {
+      "answer": "Edward Scissorhands",
+      "category": 5,
+      "difficulty": 3,
+      "id": 6,
+      "question": "What was the title of the 1990 fantasy directed by Tim Burton about a young man with multi-bladed appendages?"
+    }
+  ],
+  "success": true,
+  "total_questions": 1
+}
+```
+- Sample: For Post new question: ``` curl -X POST -H "Content-Type: application/json" -d '{"question": "London is the capital of GB?", "answer": "Yes", "category": 4, "difficulty": 1}' localhost:5000/questions
+```
+{
+  "success": true
+}
+```
 
 #### GET /categories/<int:id>/questions
 - Genreal:
