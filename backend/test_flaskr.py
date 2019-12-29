@@ -132,13 +132,12 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(data['current_category'], 3)
         self.assertTrue(data['total_questions'])
     
-    def test_create_question_failed(self):
+    def test_insert_new_question_failed(self):
         res = self.client().post('/questions', json=self.empty_question)
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 422)
         self.assertFalse(data['success'])
-
 
 
 # Make the tests conveniently executable
