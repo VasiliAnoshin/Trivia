@@ -30,6 +30,12 @@ class TriviaTestCase(unittest.TestCase):
            "category": 4,
            "difficulty": 1
         }
+        self.empty_question ={
+            "question": [],
+            "answer": [],
+            "category": [],
+            "difficulty": []
+        }
 
     def tearDown(self):
         """Executed after reach test"""
@@ -125,6 +131,15 @@ class TriviaTestCase(unittest.TestCase):
         self.assertTrue(data)
         self.assertEqual(data['current_category'], 3)
         self.assertTrue(data['total_questions'])
+    
+    def test_create_question_failed(self):
+        res = self.client().post('/questions', json=self.empty_question)
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 422)
+        self.assertFalse(data['success'])
+
+
 
 # Make the tests conveniently executable
 if __name__ == "__main__":
